@@ -19,8 +19,6 @@ export const AddTask = (title) => {
         title: title,
         isDone: false
     })
-
-    GetTasks()
 }
 
 export const GetTasks = async () => {

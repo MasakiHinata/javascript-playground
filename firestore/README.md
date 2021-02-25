@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+## Firestore
+### Install
+```bash
+yarn add firebase
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 初期化
+```js
+import firebase from `firebase/app`;
 
-## Available Scripts
+const var firebaseConfig = {
+  apiKey: "AIzaSyDOCAbC123dEf456GhI789jKl01-MnO",
+  authDomain: "myapp-project-123.firebaseapp.com",
+  databaseURL: "https://myapp-project-123.firebaseio.com",
+  projectId: "myapp-project-123",
+  storageBucket: "myapp-project-123.appspot.com",
+  messagingSenderId: "65211879809",
+  appId: "1:65211879909:web:3ae38ef1cdcb2e01fe5f0c",
+  measurementId: "G-8GSGZQ44ST"
+};
 
-In the project directory, you can run:
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+```
 
-### `yarn start`
+### Firestoreの取得
+```js
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+const database = firebase.firestore()
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Firestoreのデータを扱う
+#### Firestoreに保存できるデータとして変換する
+```js
+toJson(){
+    return {
+        id: this.id,
+        title: this.title,
+        isDone: this.isDone
+    }
+}
+```
+#### Firestoreからもらったデータをオブジェクトとして扱う
+```js
+static fromJson(json) {
+    return new Task(json.id, json.title, json.isDone);
+}
+```
 
-### `yarn test`
+### ドキュメントの作成
+```js
+const database = firebase.firestore()
+database.collection('tasks').add({
+    title: title,
+    isDone: false
+})
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### ドキュメントの取得
+```js
+const database = firebase.firestore()
+const snapshot = await database.collection('tasks').get()
+let tasks = snapshot.docs.map(doc => {
+    return Task.fromJson({ id: doc.id, ...doc.data() })
+})
+```
 
-### `yarn build`
+### ドキュメントの削除
+```js
+const database = firebase.firestore()
+database.collection('tasks').doc(id).delete()
+    .then(() => console.log('Document successfully deleted'))
+    .catch((error) => console.log(`Error removing document: ${error}`))
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### スナップショットを取得
+```js
+const database = firebase.firestore()
+const behaviourSubject = new BehaviorSubject([])
+database.collection('tasks').onSnapshot((snapshot) => {
+    let tasks = snapshot.docs.map((doc) => Task.fromJson({ id: doc.id, ...doc.data() }))
+    behaviourSubject.next(tasks)
+})
+```

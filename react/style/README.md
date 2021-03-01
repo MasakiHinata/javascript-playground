@@ -1,70 +1,98 @@
-# Getting Started with Create React App
+## React Style
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## CSS Module
 
-## Available Scripts
+```
+XXX.js
+XXX.module.js
+```
 
-In the project directory, you can run:
+```jsx
+import React from 'react';
+import styles from './CssModule.module.css'
 
-### `yarn start`
+export const CssModule = () => {
+    return (<div className={styles.text}>
+        CSS Module
+    </div>)
+}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Inline CSS
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```jsx
+const style = ({ fontSize }) => ({
+    color: 'blue',
+    fontSize: fontSize
+})
 
-### `yarn test`
+export const InlineCss = () => {
+    return (<div style={style({ fontSize: 20 })}>Inline CSS</div>)
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## StyledComponent
 
-### `yarn build`
+### Install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+yarn add styled-components
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```jsx
+import styled from 'styled-components'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const StyledText = styled.div`
+    color: pink;
+		font-size: ${props => props.fontSize}px;
+`
 
-### `yarn eject`
+export const StyledComponent = () => {
+    return (<div>
+        <StyledText fontSize={30}>Styled Component</StyledText>
+    </div>)
+}
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 継承
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```jsx
+const ChildStyledText = styled(StyledText)`
+    font-weight: bold;
+`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+export const StyledComponent = () => {
+    return (<div>
+        <ChildStyledText fontSize={30}>Styled Component</ChildStyledText>
+    </div>)
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### パラメータ
 
-## Learn More
+```jsx
+const StyledText = styled.div`
+    color: pink;
+    font-size: ${props => props.fontSize}px;
+    &:hover {
+        cursor: pointer;
+    }
+    @media(max-width: 1000px){
+        color: black;
+    }
+`
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```jsx
+const StyledList = styled.div`    
+    & ${StyledItem}:first-child {
+        margin-top: 0px;
+    }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    & ${StyledItem} {
+        margin-top: 16px;
+    }
+`
+```
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/62ef0423-2d2e-43d5-9741-373845b91240/_2021-03-01_12.16.14.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/62ef0423-2d2e-43d5-9741-373845b91240/_2021-03-01_12.16.14.png)
